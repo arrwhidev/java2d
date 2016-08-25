@@ -74,7 +74,6 @@ public class Square extends GameObject {
         g.fill(polygon);
 
         // Draw center
-        g.setStroke(new BasicStroke(5));
         g.setColor(Color.WHITE);
         g.drawLine(center.x, center.y, center.x, center.y);
     }
