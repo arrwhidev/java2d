@@ -3,6 +3,9 @@ package com.arrwhidev.game;
 import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Created by arran on 25/08/16.
+ */
 public class Square extends GameObject {
 
     private static final int MIN_SIDE = 50;
@@ -10,9 +13,13 @@ public class Square extends GameObject {
     private static final double MIN_VELOCITY = 0.5;
     private static final double MAX_VELOCITY = 7;
 
-    private int canvasWidth, canvasHeight;
+    private int canvasWidth;
+    private int canvasHeight;
 
     public Square(int canvasWidth, int canvasHeight) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+
         ThreadLocalRandom r = ThreadLocalRandom.current();
 
         // Random dimensions.
@@ -21,8 +28,8 @@ public class Square extends GameObject {
         this.h = side;
 
         // Random position in bounds.
-        this.x = r.nextInt(0, (int) (canvasWidth - this.w) + 1);
-        this.y = r.nextInt(0, (int) (canvasHeight - this.h) + 1);
+        int topLeftX = r.nextInt(0, (canvasWidth - this.w) + 1);
+        int topLeftY = r.nextInt(0, (canvasHeight - this.h) + 1);
 
         // Random velocity.
         this.velX = r.nextDouble(MIN_VELOCITY, MAX_VELOCITY + 1);
@@ -31,21 +38,60 @@ public class Square extends GameObject {
         // Random color.
         this.c = Color.getHSBColor(r.nextFloat(), r.nextFloat(), r.nextFloat());
 
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
+        // Construct verticies
+        this.verticiesX = new int[] {
+            topLeftX,
+            topLeftX + side,
+            topLeftX + side,
+            topLeftX
+        };
+        this.verticiesY = new int[] {
+            topLeftY,
+            topLeftY,
+            topLeftY + side,
+            topLeftY + side
+        };
+        calculateCenter();
+    }
+
+    private void calculateCenter() {
+        this.center = new Point(verticiesX[0] + (w / 2), verticiesY[0] + (h / 2));
     }
 
     public void render(Graphics2D g) {
         super.render(g);
-        g.fillRect((int) x, (int) y, (int) w, (int) h);
+
+        // Fill shape
+        Polygon p = new Polygon(verticiesX, verticiesY, 4);
+        g.fill(p);
+
+        // Draw center
+        g.setStroke(new BasicStroke(5));
+        g.setColor(Color.red);
+        g.drawLine(center.x, center.y, center.x, center.y);
     }
 
     public void update(double delta) {
         // Reverse velocity when touch perimeter.
-        if(y + h >= canvasHeight || y <= 0) velY *= -1;
-        if(x + w >= canvasWidth || x <= 0) velX *= -1;
+        if(verticiesY[0] + h >= canvasHeight || verticiesY[0] <= 0) velY *= -1;
+        if(verticiesX[0] + w >= canvasWidth || verticiesX[0] <= 0) velX *= -1;
 
-        y += velY;
-        x += velX;
+        // Apply velocity to verticies
+        for(int i = 0; i < verticiesX.length; i++) {
+            verticiesX[i] += velX;
+            verticiesY[i] += velY;
+        }
+
+        // Update center.
+        calculateCenter();
     }
+
+    // TODO - Rotate stuff later...
+    /*
+    public Vertex rotateVertex(Vertex pt, Vertex center, double angle) {
+        double newX = center.x + (pt.x-center.x)*Math.cos(angle) - (pt.y-center.y)*Math.sin(angle);
+        double newY = center.y + (pt.x-center.x)*Math.sin(angle) + (pt.y-center.y)*Math.cos(angle);
+        return new Vertex(newX, newY);
+    }
+    */
 }

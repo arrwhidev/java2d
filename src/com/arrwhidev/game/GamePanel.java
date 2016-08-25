@@ -6,13 +6,17 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by arran on 25/08/16.
+ */
 public class GamePanel extends Canvas implements Runnable {
 
     public static final int WIDTH = 1200;
     public static final int HEIGHT = WIDTH / 16 * 9;
-
     private static final double FPS = 60D;
     private static final double NS_PER_TICK = 1000000000D / FPS;
+
+    private static final int NUM_SQUARE = 4;
 
     private int theFrames = 0, theTicks = 0;
     private Thread thread;
@@ -43,7 +47,7 @@ public class GamePanel extends Canvas implements Runnable {
         g = (Graphics2D) image.getGraphics();
 
         // Add game objects.
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < NUM_SQUARE; i++) {
             sqs.add(new Square(WIDTH, HEIGHT));
         }
     }

@@ -2,6 +2,9 @@ package com.arrwhidev.game;
 
 import javax.swing.*;
 
+/**
+ * Created by arran on 25/08/16.
+ */
 public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame("Game");

@@ -8,7 +8,11 @@ import java.awt.*;
 public abstract class GameObject {
 
     protected Color c;
-    protected double x, y, w, h, velX, velY;
+    protected double velX, velY;
+    protected int w, h;
+    protected int[] verticiesX;
+    protected int[] verticiesY;
+    protected Point center;
 
     public void render(Graphics2D g) {
         g.setColor(c);
