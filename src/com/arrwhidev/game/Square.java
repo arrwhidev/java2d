@@ -1,6 +1,8 @@
 package com.arrwhidev.game;
 
 import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -39,13 +41,13 @@ public class Square extends GameObject {
         this.c = Color.getHSBColor(r.nextFloat(), r.nextFloat(), r.nextFloat());
 
         // Construct verticies
-        this.verticiesX = new int[] {
+        this.verticiesX = new double[] {
             topLeftX,
             topLeftX + side,
             topLeftX + side,
             topLeftX
         };
-        this.verticiesY = new int[] {
+        this.verticiesY = new double[] {
             topLeftY,
             topLeftY,
             topLeftY + side,
@@ -55,19 +57,25 @@ public class Square extends GameObject {
     }
 
     private void calculateCenter() {
-        this.center = new Point(verticiesX[0] + (w / 2), verticiesY[0] + (h / 2));
+        this.center = new Point((int)verticiesX[0] + (w / 2), (int)verticiesY[0] + (h / 2));
     }
 
     public void render(Graphics2D g) {
         super.render(g);
 
-        // Fill shape
-        Polygon p = new Polygon(verticiesX, verticiesY, 4);
-        g.fill(p);
+        // Fill the polygon.
+        // Using GeneralPath because Polygon only supports ints as coords.
+        // GeneralPath allows me to use doubles instead, which are more accurate.
+        GeneralPath polygon = new GeneralPath();
+        polygon.moveTo(verticiesX[0], verticiesY[0]);
+        for(int i = 1; i < verticiesX.length; i++) {
+            polygon.lineTo(verticiesX[i], verticiesY[i]);
+        }
+        g.fill(polygon);
 
         // Draw center
         g.setStroke(new BasicStroke(5));
-        g.setColor(Color.red);
+        g.setColor(Color.WHITE);
         g.drawLine(center.x, center.y, center.x, center.y);
     }
 

@@ -10,8 +10,8 @@ public abstract class GameObject {
     protected Color c;
     protected double velX, velY;
     protected int w, h;
-    protected int[] verticiesX;
-    protected int[] verticiesY;
+    protected double[] verticiesX;
+    protected double[] verticiesY;
     protected Point center;
 
     public void render(Graphics2D g) {

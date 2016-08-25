@@ -23,7 +23,7 @@ public class GamePanel extends Canvas implements Runnable {
     private boolean running;
     private BufferedImage image;
     private Graphics2D g;
-    private List<Square> sqs = new ArrayList<>();
+    private List<Square> squares = new ArrayList<>();
 
     public GamePanel() {
         super();
@@ -48,7 +48,7 @@ public class GamePanel extends Canvas implements Runnable {
 
         // Add game objects.
         for(int i = 0; i < NUM_SQUARE; i++) {
-            sqs.add(new Square(WIDTH, HEIGHT));
+            squares.add(new Square(WIDTH, HEIGHT));
         }
     }
 
@@ -90,7 +90,7 @@ public class GamePanel extends Canvas implements Runnable {
     }
 
     private void update(double delta) {
-        sqs.stream().forEach(sq -> sq.update(delta));
+        squares.stream().forEach(sq -> sq.update(delta));
     }
 
     private void render() {
@@ -99,7 +99,7 @@ public class GamePanel extends Canvas implements Runnable {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Render game objects.
-        sqs.stream().forEach(sq -> sq.render(g));
+        squares.stream().forEach(sq -> sq.render(g));
 
         // Render fps data.
         g.setColor(Color.green);
